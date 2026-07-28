@@ -29,7 +29,7 @@ class CLI
         select_artist
       when "4"
         puts
-        puts "Select an artist to view their releases."
+        puts "Select an artist first to view their releases."
       when "5"
         puts
         puts "Select an artist first to add a release."
@@ -174,6 +174,28 @@ end
   end
 end
 
+  def delete_artist(artist)
+    puts
+    puts "Delete Artist"
+    puts "-------------"
+    puts "This will also delete all releases belonging to #{artist.name}."
+    print "Are you sure? (y/n): "
+
+    confirmation = gets.chomp.downcase
+
+    if confirmation == "y"
+    artist.destroy
+
+      puts
+      puts "'#{artist.name}' was deleted."
+      true
+    else
+      puts
+      puts "Deletion canceled."
+      false
+  end
+end
+
   def select_artist
     artists = Artist.order(:name)
 
@@ -229,8 +251,8 @@ end
       when "3"
         update_artist(artist)
       when "4"
-        puts
-        puts "Delete #{artist.name} is coming soon."
+        deleted = delete_artist(artist)
+        break if deleted
       when "5"
         break
       else
