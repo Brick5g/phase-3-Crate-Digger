@@ -274,7 +274,7 @@ end
 
       case choice
       when "1"
-        view_releases(artist)
+        select_release(artist)
       when "2"
         add_release(artist)
       when "3"
@@ -390,6 +390,125 @@ end
   else
     puts
     puts "Release could not be added."
+
+    release.errors.full_messages.each do |message|
+      puts "- #{message}"
+    end
+  end
+end
+
+def select_release(artist)
+  releases = artist.releases.order(:title)
+
+  if releases.empty?
+    puts
+    puts "No releases found."
+    return
+  end
+
+  puts
+  puts "Select a Release"
+  puts "----------------"
+
+  releases.each_with_index do |release, index|
+    puts "#{index + 1}. #{release.title}"
+  end
+
+  print "> "
+  choice = gets.chomp.to_i
+
+  if choice < 1 || choice > releases.length
+    puts
+    puts "Invalid release selection."
+    return
+  end
+
+  selected_release = releases[choice - 1]
+
+  release_menu(selected_release)
+end
+
+def release_menu(release)
+  loop do
+    puts
+    puts "Release: #{release.title}"
+    puts "Artist: #{release.artist.name}"
+    puts
+    puts "1. View details"
+    puts "2. Update release"
+    puts "3. Delete release"
+    puts "4. Back to artist menu"
+    print "> "
+
+    choice = gets.chomp
+
+    case choice
+    when "1"
+      view_release_details(release)
+    when "2"
+      update_release(release)
+    when "3"
+      puts
+      puts "Delete '#{release.title}' is coming soon."
+    when "4"
+      break
+    else
+      puts
+      puts "Invalid selection. Please choose a number from 1 to 4."
+    end
+  end
+end
+
+def view_release_details(release)
+  puts
+  puts release.title
+  puts "-" * release.title.length
+  puts "Artist: #{release.artist.name}"
+  puts "Type: #{release.release_type}"
+  puts "Year: #{release.release_year}"
+  puts "Rating: #{release.rating}"
+
+  unless release.notes.nil? || release.notes.empty?
+    puts "Notes: #{release.notes}"
+  end
+end
+
+def update_release(release)
+  puts
+  puts "Update Release"
+  puts "--------------"
+  puts "Press Enter to keep the current value."
+  puts
+
+  print "Title [#{release.title}]: "
+  title = gets.chomp
+
+  print "Release year [#{release.release_year}]: "
+  release_year_input = gets.chomp
+
+  print "Release type [#{release.release_type}]: "
+  release_type = gets.chomp
+
+  print "Rating [#{release.rating}]: "
+  rating_input = gets.chomp
+
+  print "Notes [#{release.notes}]: "
+  notes = gets.chomp
+
+  updated_attributes = {
+    title: title.empty? ? release.title : title,
+    release_year: release_year_input.empty? ? release.release_year : release_year_input.to_i,
+    release_type: release_type.empty? ? release.release_type : release_type,
+    rating: rating_input.empty? ? release.rating : rating_input.to_i,
+    notes: notes.empty? ? release.notes : notes
+  }
+
+  if release.update(updated_attributes)
+    puts
+    puts "'#{release.title}' was updated successfully."
+  else
+    puts
+    puts "Release could not be updated."
 
     release.errors.full_messages.each do |message|
       puts "- #{message}"
