@@ -28,8 +28,7 @@ class CLI
       when "3"
         select_artist
       when "4"
-        puts
-        puts "Select an artist first to view their releases."
+        view_all_releases
       when "5"
         puts
         puts "Select an artist first to add a release."
@@ -285,6 +284,33 @@ end
       end
     end
   end
+
+  def view_all_releases
+    releases = Release.includes(:artist).order(:title)
+
+    puts
+    puts "All Releases"
+    puts "------------"
+
+    if releases.empty?
+      puts
+      puts "No releases found."
+      return
+    end
+
+    releases.each_with_index do |release, index|
+      puts
+      puts "#{index + 1}. #{release.title}"
+      puts "   Artist: #{release.artist.name}"
+      puts "   Type: #{release.release_type}"
+      puts "   Year: #{release.release_year}"
+      puts "   Rating: #{release.rating}"
+
+      unless release.notes.nil? || release.notes.empty?
+        puts "   Notes: #{release.notes}"
+    end
+  end
+end
 
   def add_release(artist)
   puts
