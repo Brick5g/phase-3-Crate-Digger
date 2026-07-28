@@ -147,8 +147,8 @@ def artist_menu(artist)
 
     case choice
     when "1"
-      puts
-      puts "View releases for #{artist.name} is coming soon."
+      view_releases(artist)
+
     when "2"
       puts
       puts "Add a release for #{artist.name} is coming soon."
@@ -167,10 +167,29 @@ def artist_menu(artist)
   end
 end
 
-  def view_releases
+def view_releases(artist)
+  puts
+  puts "Releases for #{artist.name}"
+  puts "-------------------------"
+
+  if artist.releases.empty?
     puts
-    puts "View all releases is coming soon."
+    puts "No releases found."
+    return
   end
+
+  artist.releases.each_with_index do |release, index|
+    puts
+    puts "#{index + 1}. #{release.title}"
+    puts "   Type: #{release.release_type}"
+    puts "   Year: #{release.release_year}"
+    puts "   Rating: #{release.rating}"
+
+    unless release.notes.nil? || release.notes.empty?
+      puts "   Notes: #{release.notes}"
+    end
+  end
+end
 
   def add_release
     puts
