@@ -104,6 +104,76 @@ class CLI
     end
   end
 
+  def update_artist(artist)
+  puts
+  puts "Update Artist"
+  puts "-------------"
+  puts "Press Enter to keep the current value."
+  puts
+
+  print "Name [#{artist.name}]: "
+  name = gets.chomp
+
+  print "Genre [#{artist.genre}]: "
+  genre = gets.chomp
+
+  print "Hometown [#{artist.hometown}]: "
+  hometown = gets.chomp
+
+  updated_attributes = {
+    name: name.empty? ? artist.name : name,
+    genre: genre.empty? ? artist.genre : genre,
+    hometown: hometown.empty? ? artist.hometown : hometown
+  }
+
+  if artist.update(updated_attributes)
+    puts
+    puts "'#{artist.name}' was updated successfully."
+  else
+    puts
+    puts "Artist could not be updated."
+
+    artist.errors.full_messages.each do |message|
+      puts "- #{message}"
+    end
+  end
+end
+
+  def update_artist(artist)
+  puts
+  puts "Update Artist"
+  puts "-------------"
+  puts "Press Enter to keep the current value."
+  puts
+
+  print "Name [#{artist.name}]: "
+  name = gets.chomp
+
+  print "Genre [#{artist.genre}]: "
+  genre = gets.chomp
+
+  print "Hometown [#{artist.hometown}]: "
+  hometown = gets.chomp
+
+  updated_attributes = {
+    name: name.empty? ? artist.name : name,
+    genre: genre.empty? ? artist.genre : genre,
+    hometown: hometown.empty? ? artist.hometown : hometown
+  }
+
+  if artist.update(updated_attributes)
+    puts
+    puts "'#{artist.name}' was updated successfully."
+  else
+    puts
+    puts "Artist could not be updated."
+
+    artist.errors.full_messages.each do |message|
+      puts "- #{message}"
+    end
+  end
+end
+
   def select_artist
     artists = Artist.order(:name)
 
@@ -157,8 +227,7 @@ class CLI
       when "2"
         add_release(artist)
       when "3"
-        puts
-        puts "Update #{artist.name} is coming soon."
+        update_artist(artist)
       when "4"
         puts
         puts "Delete #{artist.name} is coming soon."
