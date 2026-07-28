@@ -30,8 +30,7 @@ class CLI
       when "4"
         view_all_releases
       when "5"
-        puts
-        puts "Select an artist first to add a release."
+        select_artist_for_release
       when "6"
         exit_program
         break
@@ -225,6 +224,37 @@ end
 
     artist_menu(selected_artist)
   end
+
+  def select_artist_for_release
+    artists = Artist.order(:name)
+
+    if artists.empty?
+      puts
+      puts "No artists found. Add an artist before adding a release."
+      return
+    end
+
+    puts
+    puts "Select an Artist"
+    puts "----------------"
+
+    artists.each_with_index do |artist, index|
+      puts "#{index + 1}. #{artist.name}"
+  end
+
+  print "> "
+  choice = gets.chomp.to_i
+
+  if choice < 1 || choice > artists.length
+    puts
+    puts "Invalid artist selection."
+    return
+  end
+
+  selected_artist = artists[choice - 1]
+
+  add_release(selected_artist)
+end
 
   def artist_menu(artist)
     loop do
