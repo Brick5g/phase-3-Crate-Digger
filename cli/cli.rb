@@ -28,9 +28,11 @@ class CLI
       when "3"
         select_artist
       when "4"
-        view_releases
+        puts
+        puts "Select an artist to view their releases."
       when "5"
-        add_release
+        puts
+        puts "Select an artist first to add a release."
       when "6"
         exit_program
         break
@@ -54,20 +56,20 @@ class CLI
     print "> "
   end
 
-def view_artists
-  puts
+  def view_artists
+    puts
 
-  artists = Artist.order(:name)
+    artists = Artist.order(:name)
 
-  if artists.empty?
-    puts "No artists found."
-    return
+    if artists.empty?
+      puts "No artists found."
+      return
+    end
+
+    artists.each_with_index do |artist, index|
+      puts "#{index + 1}. #{artist.name}"
+    end
   end
-
-  artists.each_with_index do |artist, index|
-    puts "#{index + 1}. #{artist.name}"
-  end
-end
 
   def add_artist
     puts
@@ -83,7 +85,11 @@ end
     print "Hometown: "
     hometown = gets.chomp
 
-    artist = Artist.new(name: name, genre: genre, hometown: hometown)
+    artist = Artist.new(
+      name: name,
+      genre: genre,
+      hometown: hometown
+    )
 
     if artist.save
       puts
@@ -98,103 +104,151 @@ end
     end
   end
 
- def select_artist
-  artists = Artist.order(:name)
+  def select_artist
+    artists = Artist.order(:name)
 
-  if artists.empty?
+    if artists.empty?
+      puts
+      puts "No artists found."
+      return
+    end
+
     puts
-    puts "No artists found."
-    return
-  end
+    puts "Select an Artist"
+    puts "----------------"
 
-  puts
-  puts "Select an Artist"
-  puts "----------------"
+    artists.each_with_index do |artist, index|
+      puts "#{index + 1}. #{artist.name}"
+    end
 
-  artists.each_with_index do |artist, index|
-    puts "#{index + 1}. #{artist.name}"
-  end
-
-  print "> "
-  choice = gets.chomp.to_i
-
-  if choice < 1 || choice > artists.length
-    puts
-    puts "Invalid artist selection."
-    return
-  end
-
-  selected_artist = artists[choice - 1]
-
-  artist_menu(selected_artist)
-end
-
-def artist_menu(artist)
-  loop do
-    puts
-    puts "Artist: #{artist.name}"
-    puts "Genre: #{artist.genre}"
-    puts "Hometown: #{artist.hometown}"
-    puts
-    puts "1. View releases"
-    puts "2. Add a release"
-    puts "3. Update artist"
-    puts "4. Delete artist"
-    puts "5. Back to main menu"
     print "> "
+    choice = gets.chomp.to_i
 
-    choice = gets.chomp
+    if choice < 1 || choice > artists.length
+      puts
+      puts "Invalid artist selection."
+      return
+    end
 
-    case choice
-    when "1"
-      view_releases(artist)
+    selected_artist = artists[choice - 1]
 
-    when "2"
+    artist_menu(selected_artist)
+  end
+
+  def artist_menu(artist)
+    loop do
       puts
-      puts "Add a release for #{artist.name} is coming soon."
-    when "3"
+      puts "Artist: #{artist.name}"
+      puts "Genre: #{artist.genre}"
+      puts "Hometown: #{artist.hometown}"
       puts
-      puts "Update #{artist.name} is coming soon."
-    when "4"
-      puts
-      puts "Delete #{artist.name} is coming soon."
-    when "5"
-      break
-    else
-      puts
-      puts "Invalid selection. Please choose a number from 1 to 5."
+      puts "1. View releases"
+      puts "2. Add a release"
+      puts "3. Update artist"
+      puts "4. Delete artist"
+      puts "5. Back to main menu"
+      print "> "
+
+      choice = gets.chomp
+
+      case choice
+      when "1"
+        view_releases(artist)
+      when "2"
+        add_release(artist)
+      when "3"
+        puts
+        puts "Update #{artist.name} is coming soon."
+      when "4"
+        puts
+        puts "Delete #{artist.name} is coming soon."
+      when "5"
+        break
+      else
+        puts
+        puts "Invalid selection. Please choose a number from 1 to 5."
+      end
     end
   end
-end
 
-def view_releases(artist)
+  def view_releases(artist)
+    puts
+    puts "Releases for #{artist.name}"
+    puts "-------------------------"
+
+    if artist.releases.empty?
+      puts
+      puts "No releases found."
+      return
+    end
+
+    artist.releases.each_with_index do |release, index|
+      puts
+      puts "#{index + 1}. #{release.title}"
+      puts "   Type: #{release.release_type}"
+      puts "   Year: #{release.release_year}"
+      puts "   Rating: #{release.rating}"
+
+      unless release.notes.nil? || release.notes.empty?
+        puts "   Notes: #{release.notes}"
+      end
+    end
+  end
+
+  def add_release(artist)
   puts
-  puts "Releases for #{artist.name}"
-  puts "-------------------------"
+  puts "Add a Release"
+  puts "-------------"
 
-  if artist.releases.empty?
+  print "Title: "
+  title = gets.chomp
+
+  print "Release year: "
+  release_year_input = gets.chomp
+
+  print "Release type: "
+  release_type = gets.chomp
+
+  print "Rating (1-10): "
+  rating_input = gets.chomp
+
+  print "Notes: "
+  notes = gets.chomp
+
+  release_year =
+    if release_year_input.empty?
+      nil
+    else
+      release_year_input.to_i
+    end
+
+  rating =
+    if rating_input.empty?
+      nil
+    else
+      rating_input.to_i
+    end
+
+  release = artist.releases.new(
+    title: title,
+    release_year: release_year,
+    release_type: release_type,
+    rating: rating,
+    notes: notes
+  )
+
+  if release.save
     puts
-    puts "No releases found."
-    return
-  end
-
-  artist.releases.each_with_index do |release, index|
+    puts "'#{release.title}' was added to #{artist.name}."
+  else
     puts
-    puts "#{index + 1}. #{release.title}"
-    puts "   Type: #{release.release_type}"
-    puts "   Year: #{release.release_year}"
-    puts "   Rating: #{release.rating}"
+    puts "Release could not be added."
 
-    unless release.notes.nil? || release.notes.empty?
-      puts "   Notes: #{release.notes}"
+    release.errors.full_messages.each do |message|
+      puts "- #{message}"
     end
   end
 end
-
-  def add_release
-    puts
-    puts "Add a release is coming soon."
-  end
 
   def exit_program
     puts
