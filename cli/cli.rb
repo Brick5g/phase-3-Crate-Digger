@@ -1,3 +1,4 @@
+require_relative "branding"
 require_relative "main_menu"
 require_relative "artist_menu"
 require_relative "artist_actions"
@@ -6,6 +7,7 @@ require_relative "release_display"
 require_relative "release_actions"
 
 class CLI
+  include Branding
   include MainMenu
   include ArtistMenu
   include ArtistActions
@@ -14,7 +16,7 @@ class CLI
   include ReleaseActions
 
   def start
-    welcome
+    display_intro
     main_menu
   end
 end
