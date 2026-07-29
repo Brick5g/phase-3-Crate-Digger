@@ -448,8 +448,8 @@ def release_menu(release)
     when "2"
       update_release(release)
     when "3"
-      puts
-      puts "Delete '#{release.title}' is coming soon."
+      deleted = delete_release(release)
+      break if deleted
     when "4"
       break
     else
@@ -513,6 +513,52 @@ def update_release(release)
     release.errors.full_messages.each do |message|
       puts "- #{message}"
     end
+  end
+end
+
+def delete_release(release)
+  puts
+  puts "Delete Release"
+  puts "--------------"
+  puts "You are about to delete '#{release.title}'."
+  print "Are you sure? (y/n): "
+
+  confirmation = gets.chomp.downcase
+
+  if confirmation == "y"
+    title = release.title
+    release.destroy
+
+    puts
+    puts "'#{title}' was deleted."
+    true
+  else
+    puts
+    puts "Deletion canceled."
+    false
+  end
+end
+
+def delete_release(release)
+  puts
+  puts "Delete Release"
+  puts "--------------"
+  puts "You are about to delete '#{release.title}'."
+  print "Are you sure? (y/n): "
+
+  confirmation = gets.chomp.downcase
+
+  if confirmation == "y"
+    title = release.title
+    release.destroy
+
+    puts
+    puts "'#{title}' was deleted."
+    true
+  else
+    puts
+    puts "Deletion canceled."
+    false
   end
 end
 
