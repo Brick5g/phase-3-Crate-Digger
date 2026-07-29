@@ -62,7 +62,7 @@ Release validations:
 Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:Brick5g/phase-3-Crate-Digger.git
 ```
 
 Move into the project
