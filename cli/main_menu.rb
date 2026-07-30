@@ -1,13 +1,4 @@
 module MainMenu
-  def welcome
-    puts
-    puts "=========================="
-    puts "       CRATE DIGGER"
-    puts "=========================="
-    puts
-    puts "Build and manage your personal music collection."
-    puts
-  end
 
   def main_menu
     loop do
