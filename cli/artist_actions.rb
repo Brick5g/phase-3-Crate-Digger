@@ -22,7 +22,7 @@ module ArtistActions
     print "Name: "
     name = gets.chomp
 
-    print "Genre: "
+    print "Genre (examples: Hip-Hop, R&B, Soul, Jazz, Rock, Pop): "
     genre = gets.chomp
 
     print "Hometown: "
@@ -57,7 +57,7 @@ module ArtistActions
     print "Name [#{artist.name}]: "
     name = gets.chomp
 
-    print "Genre [#{artist.genre}]: "
+    print "Genre [#{artist.genre}] (examples: Hip-Hop, R&B, Soul, Jazz, Rock, Pop): "
     genre = gets.chomp
 
     print "Hometown [#{artist.hometown}]: "
