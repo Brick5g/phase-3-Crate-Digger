@@ -3,17 +3,19 @@ module ReleaseActions
     puts
     puts "Add a Release"
     puts "-------------"
+    puts "Press Enter to skip optional fields."
+    puts
 
     print "Title: "
     title = gets.chomp
 
-    print "Release year: "
+    print "Release year (4-digit year, example: 2015): "
     release_year_input = gets.chomp
 
-    print "Release type: "
+    print "Release type (#{Release::RELEASE_TYPES.join(", ")}): "
     release_type = gets.chomp
 
-    print "Rating (1-10): "
+    print "Rating (whole number from 1-10): "
     rating_input = gets.chomp
 
     print "Notes: "
@@ -26,12 +28,16 @@ module ReleaseActions
         release_year_input.to_i
       end
 
+    release_type = nil if release_type.empty?
+
     rating =
       if rating_input.empty?
         nil
       else
         rating_input.to_i
       end
+
+    notes = nil if notes.empty?
 
     release = artist.releases.new(
       title: title,
@@ -64,13 +70,13 @@ module ReleaseActions
     print "Title [#{release.title}]: "
     title = gets.chomp
 
-    print "Release year [#{release.release_year}]: "
+    print "Release year [#{release.release_year}] (4-digit year): "
     release_year_input = gets.chomp
 
-    print "Release type [#{release.release_type}]: "
+    print "Release type [#{release.release_type}] (#{Release::RELEASE_TYPES.join(", ")}): "
     release_type = gets.chomp
 
-    print "Rating [#{release.rating}]: "
+    print "Rating [#{release.rating}] (whole number from 1-10): "
     rating_input = gets.chomp
 
     print "Notes [#{release.notes}]: "
