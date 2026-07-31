@@ -22,4 +22,11 @@ class Release < ActiveRecord::Base
               in: RELEASE_TYPES,
               allow_nil: true
             }
+  default_scope { where(deleted_at: nil) }
+
+  def destroy
+    run_callbacks(:destroy) do
+      update_column(:deleted_at, Time.current)
+    end
+  end
 end
