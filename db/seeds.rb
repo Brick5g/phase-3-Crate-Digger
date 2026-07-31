@@ -1,7 +1,7 @@
 puts "Clearing existing data..."
 
-Release.destroy_all
-Artist.destroy_all
+Release.unscoped.delete_all
+Artist.unscoped.delete_all
 
 puts "Creating artists..."
 
